@@ -1,22 +1,24 @@
-# getfile-project
+#!/bin/bash
 
-**TransactionCount ClientIP|ServiceName**
-2  10.85.1.7, 10.145.0.171:64963|GetProfileType |Date
-10  10.85.1.7, 10.145.0.171:64963|GetProfile |Date
+LOGS_PATH="${1}"
 
-VAS ค่า
-/eqx/af/SSB-PROFILE-API/log/detail/LOG_DETAIL
-/eqx/af/SSB-PACKAGE-API/log/detail/LOG_DETAIL
-/eqx/af/SSB-SERVICE-API/log/detail/LOG_DETAIL
-/eqx/af/apipackage/log/detail/LOG_DETAIL
-/eqx/af/API-TRANSFORM/detaillog/DETAIL_LOG
+Transaction() {
+  while read -r LINE; do
+    SERVICE="$(echo "$LINE" | egrep -n "^\"2023|^2023|\}\|2023" | awk -F "|" '{print $6}')"
+    CLIENT="$(echo "$LINE" | egrep -n "^\"2023|^2023|\}\|2023" | grep -o '"X-Forwarded-For":"[^"]\+"' | cut -d ":" -f 2-3 | tr -d '"')"
 
-IT ค่า
-/eqx/af/SSB-PROFILE-API/detaillog/bak
-/eqx/af/SSB-SERVICE-API/detaillog/bak
-/eqx/af/SSB-TRANSFORM-API/detaillog/bak
+    if [ ! -z "${CLIENT}" ]; then
+      echo "${CLIENT} | ${SERVICE} | ${DATE}"
+    fi
+  done < "$1"
+}
 
-/eqx/af/front_end/detaillog/bak
-/eqx/af/front_end/incominglog/bak
-/eqx/af/back_end/detaillog/bak
-/eqx/af/back_end/incominglog/bak
+######## Start ##########
+DATE="$(ls "${LOGS_PATH}" | awk -F "_" '{print $4}' | tr -d '.log' | cut -c 1-8 |uniq)"
+TIME="$(date "+%T")"
+echo "Date: ${DATE} | Time: ${TIME}"
+echo "---------------------------"
+
+for ifile in "${LOGS_PATH}"/PSSBPROA902G_SSB-PROFILE-API_SUMMARY_*.log.gz; do
+  Transaction "$ifile" | sort | uniq -c
+done
