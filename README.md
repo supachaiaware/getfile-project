@@ -20,5 +20,5 @@ echo "Date: ${DATE} | Time: ${TIME}"
 echo "---------------------------"
 
 for ifile in "${LOGS_PATH}"/PSSBPROA902G_SSB-PROFILE-API_SUMMARY_*.log.gz; do
-  Transaction "$ifile" | sort | uniq -c
-done
+  Transaction "$ifile"
+done | sort | uniq -c
