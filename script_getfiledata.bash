@@ -1,35 +1,29 @@
 #!/bin/bash
 
-LOGS_PATH="${1}"
+getKeyWord(){
 
-Transaction() {
- zcat $1| while read -r LINE; do
-    SERVICE="$(echo "$LINE" | egrep -n "^\"2023|^2023|\}\|2023" | awk -F "|" '{print $6}')"
+    zgrep ^2023.*.X-Forwarded-For* ${1} |awk  -F'|' '{print $6"|"$17$18$19$20}'|sed 's/"X-Forwarded-For":"/|/g' |cut -d'|' -f1,3|cut -d'"' -f1
 
-    CLIENT="$(echo "$LINE" | egrep -n "^\"2023|^2023|\}\|2023" | grep -o '"X-Forwarded-For":"[^"]\+"' | cut -d ":" -f 2-3 | tr -d '"')"
+}
+a
+getRePort_byFile(){
 
-    if [ ! -z "${CLIENT}" ]; then
-      echo "${CLIENT} | ${SERVICE} | ${DATE}"
-    fi
+for i in $(find ${1}/ -type f -name "*.gz" );do
 
-  done 
+    getKeyWord $i >> tmp/tmp.out
+
+done
+
 }
 
-######## Start ##########
+echo "Start: $(date +'%Y%m%d %H:%M:%S')"
 
-DATE=$(date --date "1 day ago" +'%Y%m%d' )
-TIME="$(date "+%T")"
-echo "Date: ${DATE} | Time: ${TIME}"
-echo "---------------------------"
+#Clear tmp file
 
-PATH_LIST="/NAS/TLS/VAS_SSB_TRANSFORM/PSSBPKGA801G/SSB-PACKAGE-API/log/detail
-/NAS/TLS/VAS_SSB_TRANSFORM/PSSBPROA801G/SSB-PROFILE-API/log/detail
-/NAS/TLS/VAS_SSB_TRANSFORM/PSSBSRVA801G/SSB-SERVICE-API/log/detail
-/NAS/SUK/SSB_OLYMPUS/PSSBOPB201G/apipackage/log/detail
-/VASQUERY/API_TRANSFORM/PAPITRNA801G/API-TRANSFORM/detail"
+echo "" > tmp/tmp.out
 
-for ifile in "${PATH_LIST}/$(date --date "1 day ago" +'%Y%m%d' )"; do 
-    for i in $(find  $ifile/ -type f -name "*.gz"); do
-        if [ -f "$i" ];then Transaction "$i"; fi
-    done
-done | sort | uniq -c
+getRePort_byFile ${1}
+
+sort tmp/tmp*.out |uniq -c
+
+echo "END: $(date +'%Y%m%d %H:%M:%S')"
