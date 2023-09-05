@@ -5,7 +5,7 @@ getKeyWord(){
     zgrep ^2023.*.X-Forwarded-For* ${1} |awk  -F'|' '{print $6"|"$17$18$19$20}'|sed 's/"X-Forwarded-For":"/|/g' |cut -d'|' -f1,3|cut -d'"' -f1
 
 }
-a
+
 getRePort_byFile(){
 
 for i in $(find ${1}/ -type f -name "*.gz" );do
