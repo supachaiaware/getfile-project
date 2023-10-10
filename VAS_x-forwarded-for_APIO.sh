@@ -8,7 +8,7 @@ zgrep ^2023.*.X-Forwarded-For* ${1}|awk  -F'|' '{print $3"|"$9$10$11}'|sed 's/"X
 
 getRePort_byFile(){
 
-for i in $(find ${1}/ -type f -name "*.gz");do
+for i in $(find ${1}/ -type f -name "*_$(date --date "1 day ago" +'%Y%m%d')*.gz" );do
 
     getKeyWord $i >> tmp/tmp_$$_.out
 
