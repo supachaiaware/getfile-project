@@ -26,5 +26,6 @@ Image_file="tmp/${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
 
     echo "$line" | cut -d '|' -f4  | base64 -d > "$Image_file"
     ((counter++))
+    
 done < tmp/tmp_$$_.out
 
