@@ -1,5 +1,5 @@
 #!/bin/bash
-
+umask 000
 echo "Program Start ..."
 
 GetIDcardImage() {
