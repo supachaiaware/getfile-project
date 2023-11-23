@@ -1,31 +1,42 @@
 #!/bin/bash
 
-getKeyWord() {
+echo "Program Start ..."
+
+GetIDcardImage() {
+
     grep ^2023.*.idCardImage* "${1}" | awk -F'|' '{print $1 "|" $9}' | sed 's/","/|/g; s/":"/|/g' | cut -d '|' -f1,7,49,57
 }
 
-getRePort_byFile() {
-    for i in $(find "${1}" -type f -name "*.log"); do
-        getKeyWord "$i" >> tmp/tmp_$$_.out
+
+DecodeBase64() {
+
+  find "${1}" -type f -name "*.log" | while IFS= read -r i; do
+
+        while IFS= read -r line; do
+
+
+            TIMESTAMP=$(echo "$line" | cut -d '|' -f1 | tr -d ':')
+            MOBILE_NUM=$(echo "$line" | cut -d '|' -f2)
+            ID_CARD=$(echo "$line" | cut -d '|' -f3)
+
+        FOLDER_NAME=$(ls "${1}" | awk -F'_' '{print $5}' | cut -d '.' -f1)
+
+                if [ ! -d $FOLDER_NAME ];then
+                        mkdir -p "$FOLDER_NAME"
+                fi
+
+            IMAGE_NAME="${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
+
+            echo "$line" | cut -d '|' -f4 | base64 -d > ${FOLDER_NAME}/${IMAGE_NAME}
+
+
+            echo "Image name: ${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
+
+        done < <(GetIDcardImage "$i")
+
     done
 }
 
-getRePort_byFile "${1}"
+DecodeBase64 "${1}"
 
-sort tmp/tmp_$$_.out
-
-# Base64
-counter=1
-
-while IFS= read -r line; do
-    TIMESTAMP=$(echo "$line" | cut -d '|' -f1 | tr -d ':')
-    MOBILE_NUM=$(echo "$line" | cut -d '|' -f2)
-    ID_CARD=$(echo "$line" | cut -d '|' -f3)
-
-Image_file="tmp/${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
-
-    echo "$line" | cut -d '|' -f4  | base64 -d > "$Image_file"
-    ((counter++))
-    
-done < tmp/tmp_$$_.out
-
+echo "Program done and save image successfully."
