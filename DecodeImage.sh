@@ -15,11 +15,11 @@ DecodeBase64() {
         while IFS= read -r line; do
 
 
-            TIMESTAMP=$(echo "$line" | cut -d '|' -f1 | tr -d ':')
-            MOBILE_NUM=$(echo "$line" | cut -d '|' -f2)
-            ID_CARD=$(echo "$line" | cut -d '|' -f3)
+            TIMESTAMP=$(echo "$line" |cut -d '|' -f1 | tr -d ':')
+            MOBILE_NUM=$(echo "$line" |cut -d '|' -f2)
+            ID_CARD=$(echo "$line" |cut -d '|' -f3)
 
-        FOLDER_NAME=$(ls "${1}" | awk -F'_' '{print $5}' | cut -d '.' -f1)
+        FOLDER_NAME=$(ls "${1}" |awk -F'_' '{print $5}' |cut -d '.' -f1 |tail -1)
 
                 if [ ! -d $FOLDER_NAME ];then
                         mkdir -p "$FOLDER_NAME"
