@@ -3,8 +3,8 @@
 ORIGINAL_FOLDER=${1}
 DECODE_PATH=${2}
 
-for i in "$ORIGINAL_FOLDER"/*; do
-    if [ ! -s "$i" ]; then
+for i in "$ORIGINAL_FOLDER"/*.jpg; do
+    if [ -f "$i" ] && [ ! -s "$i" ]; then
         FILENAME=$(basename "$i")
 
         CUT_ORIGINAL=$(echo "$FILENAME" | awk -F '_' '{print $2"_"$3}')
