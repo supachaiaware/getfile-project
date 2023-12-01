@@ -28,7 +28,6 @@ DecodeBase64() {
 
             echo "$line" | cut -d '|' -f4 | base64 -d > ${FOLDER_NAME}/${IMAGE_NAME}
 
-
             echo "Image name: ${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
 
         done < <(GetIDcardImage "$i")
