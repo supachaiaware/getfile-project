@@ -13,8 +13,6 @@ getMetaData(){
 
         IMG_ENCODE=$(echo "${1}"| grep ^2023.*.idCardImage* | awk -F'|' '{print $1 "|" $9}'|sed 's|"idCardImage":"data:image/jpeg;base64,|\||g'|sed  's/"idCardImage": "/|/g'|sed 's/"idCardImage":"/|/g' |awk -F'|' '{print $NF}'|awk -F'"' '{print $1}')
 
-        #echo "${TIMESTAMP}|${MOBILE_NUM}|${ID_CARD}|${IMG_ENCODE}"
-
 }
 
 fileCollector(){
