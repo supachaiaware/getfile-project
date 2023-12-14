@@ -1,5 +1,5 @@
 #!/bin/bash
-
+umask 000
 
 getMetaData(){
 
