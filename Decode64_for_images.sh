@@ -38,13 +38,13 @@ fileCollector(){
 
                                         while  read iline ;do
 
-                                              getMetaData "${iline}"
+                                                getMetaData "${iline}"
 
-                                              IMAGE_NAME="${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
+                                                IMAGE_NAME="${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
 
                                         if [ ! -z ${IMG_ENCODE} ];then
-                                              echo "convert file to: ${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
-                                              echo "${IMG_ENCODE}" | base64 -d > ${FOLDER_NAME}/${IMAGE_NAME}
+                                                echo "convert file to: ${TIMESTAMP}_${MOBILE_NUM}_${ID_CARD}_pic.jpg"
+                                                echo "${IMG_ENCODE}" | base64 -d > ${FOLDER_NAME}/${IMAGE_NAME}
                                         fi
 
                                         done < $ifile
@@ -60,6 +60,9 @@ fileCollector(){
         if [ -z ${1} ];then
                 echo "wrong args! Include directory"
                 exit 127;
+        fi
+
+fileCollector ${1}
         fi
 
 fileCollector ${1}
