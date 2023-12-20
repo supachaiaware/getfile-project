@@ -63,6 +63,3 @@ fileCollector(){
         fi
 
 fileCollector ${1}
-        fi
-
-fileCollector ${1}
