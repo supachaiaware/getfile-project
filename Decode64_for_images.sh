@@ -25,11 +25,12 @@ fileCollector(){
 
         fi
 
-                echo "get a file in path"
+        echo "get a file in path"
 
                 if [ ! -d ${1} ];then
 
                 echo "directory does not exist"
+                
                 fi
 
                         for ifile in $(ls ${1}/*.log);do
@@ -60,9 +61,6 @@ fileCollector(){
         if [ -z ${1} ];then
                 echo "wrong args! Include directory"
                 exit 127;
-        fi
-
-fileCollector ${1}
         fi
 
 fileCollector ${1}
